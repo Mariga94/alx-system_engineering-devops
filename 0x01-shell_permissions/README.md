@@ -8,3 +8,7 @@
 3.group - Prints all the group the current user.
 
 4.sudo chown Command - allows user to change the ownership of a file
+
+5.touch <filename> - Creates an empty file.
+
+6.echo -n > <filename> - Creates an empty file.
