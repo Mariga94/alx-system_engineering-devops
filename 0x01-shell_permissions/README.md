@@ -16,3 +16,5 @@
 7.chmod u+x <file> - Makes file executable for your user only.
 
 8.chmod absolute form - the other way to use chmod, in which you specify a set of three numbers that together determine all the access classess and types. e.g chmod 751 myfile
+
+9.chmod a+x file - Adds Execution permission to the owner, the group owner and the other users
