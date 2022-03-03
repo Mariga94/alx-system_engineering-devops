@@ -12,3 +12,5 @@
 5.touch <filename> - Creates an empty file.
 
 6.echo -n > <filename> - Creates an empty file.
+
+7.chmod u+x <file> - Makes file executable for your user only.
