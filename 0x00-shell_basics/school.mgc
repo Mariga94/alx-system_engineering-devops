@@ -1,2 +1,2 @@
-#!/bin/bash
-file --mime-type -m School
+0 search/0 School File containing "SCHOOL"
+!:mime data
