@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # install nginx web server with configurations
-#+ Listens on port 80.
+#+     Listens on port 80.
+#+     Returns a page containing "Hello school"
 
 apt-get update
 apt-get install -y nginx
