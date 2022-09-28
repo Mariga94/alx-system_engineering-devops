@@ -3,8 +3,8 @@
 #+     Listens on port 80.
 #+     Returns a page containing "Hello school"
 
-apt-get update
-apt-get install -y nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 
 mkdir /etc/nginx/html
 touch /etc/nginx/html/index.html
