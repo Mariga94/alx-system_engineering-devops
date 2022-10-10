@@ -6,7 +6,7 @@ apt-get install -y nginx
 
 mkdir /etc/nginx/html
 touch /etc/nginx/html/index.html
-echo "Hello World!" > /etc/nginx/html/index.html
+echo "Hello Nginx! :-)" > /etc/nginx/html/index.html
 touch /etc/nginx/html/404.html
 echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
 
@@ -14,7 +14,7 @@ printf %s "server {
 	listen 80;
 	listen [::]:80 default_server;
 	root /etc/nginx/html;
-	index index.html index.html;
+	index index.html index.htm;
 
 	location /redirect_me {
 		return 301 Moved Permanently
