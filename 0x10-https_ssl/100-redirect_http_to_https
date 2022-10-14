@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Terminating SSL on HAproxy to handle encrypted traffic, unencrypt it and
+# pass it on to its destination
+
+service haproxy stop
+mv /etc/haproxy/haproxy.cfg{,.old}
+touch /etc/haproxy/haproxy.cfg
+
+printf %s "
+global
+    daemon
+    maxconn 2048
+    tune.ssl.default-dh-param 2048
+
+defaults
+    option forwardfor
+    option http-server-close
+
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+    errorfile 400 /etc/haproxy/errors/400.http
+    errorfile 403 /etc/haproxy/errors/403.http
+    errorfile 408 /etc/haproxy/errors/408.http
+    errorfile 500 /etc/haproxy/errors/500.http
+    errorfile 502 /etc/haproxy/errors/502.http
+    errorfile 503 /etc/haproxy/errors/503.http
+    errorfile 504 /etc/haproxy/errors/504.http
+
+frontend www-http
+    bind *:80
+    http-request set-header X-Forwarded-Proto http
+    http-request redirect scheme https code 301 unless { ssl_fc }
+    default_backend www-backend
+
+frontend www-https
+    bind *:443 ssl crt /etc/haproxy/certs/josephmariga.tech.pem
+    http-request set-header X-Forwarded-Proto https
+    http-request set-header X-SSL %[ssl_fc]
+    acl letsencrypt-acl path_beg /.well-known/acme-challenge/
+    use_backend letsencrypt-backend if letsencrypt-acl
+    default_backend www-backend
+
+backend www-backend
+    redirect scheme https code 301 if !{ ssl_fc }
+    server web-01 18.207.224.145:80 check
+    server web-02 3.83.32.25:80 check
+
+backend letsencrypt-backend
+   server letsencrypt 127.0.0.1:54321
+" >> /etc/haproxy/haproxy.cfg
+service haproxy start
