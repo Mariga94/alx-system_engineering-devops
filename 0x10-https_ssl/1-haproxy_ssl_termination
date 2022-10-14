@@ -6,13 +6,13 @@ service haproxy stop
 mv /etc/haproxy/haproxy.cfg{,.old}
 touch /etc/haproxy/haproxy.cfg
 
-print %s "
+printf %s "
 global
     daemon
     maxconn 2048
-    tunel.ssl.default-dh-param 2048
+    tune.ssl.default-dh-param 2048
 
-default
+defaults
     option forwardfor
     option http-server-close
 
@@ -33,12 +33,12 @@ default
 
 frontend www-http
     bind *:80
-    reqadd X-Forwarded-Proto:\ http
-    default_backed www-backend
+    http-request set-header X-Forwarded-Proto http
+    default_backend www-backend
 
 frontend www-https
     bind *:443 ssl crt /etc/haproxy/certs/josephmariga.tech.pem
-    reqadd X-Forwarded-Proto:\ https
+    http-request set-header X-Forwarded-Proto https
     http-request set-header X-SSL %[ssl_fc]
     acl letsencrypt-acl path_beg /.well-known/acme-challenge/
     use_backend letsencrypt-backend if letsencrypt-acl
@@ -52,4 +52,4 @@ backend www-backend
 backend letsencrypt-backend
    server letsencrypt 127.0.0.1:54321
 " >> /etc/haproxy/haproxy.cfg
-services haproxy start
+service haproxy start
