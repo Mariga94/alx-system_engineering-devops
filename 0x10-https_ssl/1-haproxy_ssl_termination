@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Terminating SSL on HAproxy to handle encrypted traffic, unencrypt it and
+# pass it on to its destination
+
+add-apt-repository -y ppa:certbot/certbot
+apt-get update
+apt-get install -y certbot
+service haproxy stop
+mkdir -p /etc/haproxy/certs
+
+certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d josephmariga.tech -d 
+www.josephmariga.tech
+
+DOMAIN='josephmariga.tech'
+
+sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
+chmod -R go-rwx /etc/haproxy/certs
