@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-""""Function"""
+""""Query the reddit apu and print the titles of the first
+    10 hot posts"""
 import requests
 
 
